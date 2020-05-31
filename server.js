@@ -26,7 +26,7 @@ const router = express.Router();
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', 'http://nginx-kubernetes-git-kuberneteslobo.apps.us-east-2.starter.openshift-online.com');
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -592,6 +592,6 @@ res.status(200).send({"message":"Data recieved"})
 
  app.listen(PORT,function()
  {
-     console.log("sunn raha hu me yooo ")
+     console.log("sunn raha hu me yooo1 ")
  });
  
