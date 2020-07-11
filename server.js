@@ -26,7 +26,7 @@ const router = express.Router();
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://nginx-kubernetes-git-kuberneteslobo.apps.us-east-2.starter.openshift-online.com');
+  res.setHeader('Access-Control-Allow-Origin', 'http://nginxkubernetes-git-machinelearninglobo.apps.ca-central-1.starter.openshift-online.com');
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -43,7 +43,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(cors({
-origin: ['http://localhost:4200','http://localhost:4200/'],
+origin: [http://nginxkubernetes-git-machinelearninglobo.apps.ca-central-1.starter.openshift-online.com','http://nginxkubernetes-git-machinelearninglobo.apps.ca-central-1.starter.openshift-online.com'],
 credentials: true
 }));
 
