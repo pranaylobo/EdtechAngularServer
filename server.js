@@ -65,7 +65,7 @@ const validatePayloadMiddleware = (req, res, next) => {
     console.log("wrong");
   }
 }
-
+ 
 
 let sess;
  global.checkuser;
@@ -80,7 +80,96 @@ let sess;
   // res.sendFile('index.html');
     res.send("Hello server");
  })
+var status;
+app.get('/getchattopic',function(req,res)
+ {
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("chattopic");
+    dbo.collection("topics").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      console.log("dsdd",result.length);
+      var city=[]
+      for(var i=0;i<result.length;i++)
+      {
+        console.log(result[i]["topic"]);
+        city.push(result[i]["topic"])
 
+      }
+      console.log("hello",city)
+      db.close();
+
+      res.json({
+        message:city
+      })
+    });
+  });
+ })
+
+
+ app.get('/getwebinardata',function(req,res)
+ {
+   global.city =[]
+
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("webinar");
+    dbo.collection("webinardetails").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      console.log(result);
+      global.city.push(result)
+
+      db.close(); 
+      res.json({
+        message:city
+      })
+    });
+  });
+  
+ })
+
+
+ app.post('/webinar',function(req,res)
+{
+ MongoClient.connect(url, function(err, db) {
+   if (err) throw err;
+   var dbo = db.db("webinar");
+   var myobj = { topic: req.body.topic, description:req.body.description, startdate: req.body.startdate, enddate: req.body.enddate, platform: req.body.platform, urlconnect:req.body.urlconnect, moredetails: req.body.moredetails, purl: req.body.prurl };
+   dbo.collection("webinardetails").insertOne(myobj, function(err, res) {
+     if (err) throw err;
+     console.log("1 document inserted");
+     global.count5 =1
+     db.close();
+   });
+   console.log(global.count5)
+ if( global.count5 == 1)
+ {
+  res.json({
+    email: "sucesss"
+  })
+ }
+ });
+ 
+
+})
+
+ app.post('/chattopic',function(req,res)
+ {
+    console.log("ddd",req.body.email)
+    MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db("chattopic");
+      var myobj = { email:req.body.email ,topic: '{ "title":"'+req.body.topic+'", "subtitle":"'+req.body.description+'", "email":"'+req.body.email+'"}' };
+      dbo.collection("topics").insertOne(myobj, function(err, res) {
+        if (err) throw err;
+        console.log("1 document inserted");
+        db.close();
+      });
+      res.json({
+        message:"success"
+      })
+    });
+ })
 
 app.post('/login',validatePayloadMiddleware,function(req,res)
 {
@@ -102,7 +191,7 @@ app.post('/login',validatePayloadMiddleware,function(req,res)
     dbo.collection("user").findOne({email:req.body.email}, function(err, res) {
       if (err) throw err;
       console.log("res.email",res);
-      
+      // console.log("res.status",res.status);
       if(res == null)
       {
         global.checkuser=false;
@@ -117,10 +206,12 @@ app.post('/login',validatePayloadMiddleware,function(req,res)
                 global.checkuser=true;
                 pass = res.password;
                 email = res.email;
+                status = res.status;
               }
               else {
                 pass = res.password;
                 email = res.email;
+                status = res.status;
                 global.checkuser=true;
                 global.checkpass=false;
               }
@@ -161,11 +252,12 @@ app.post('/login',validatePayloadMiddleware,function(req,res)
   else{
       req.session.email = req.body.email;
       req.session.save();
-    res.json({
-      message:true,
-      pass1: pass,
-      email1: email
-    })
+      res.json({
+        message:true,
+        pass1: pass,
+        email1: email,
+        status: status
+      })
   }
 
   },1000 )
@@ -180,11 +272,26 @@ app.get('/dashboard',(req,res) => {
   console.log("id",req.sessionID);
   console.log(req.cookies);
   if(req.session.email) {
+
       // console.log("sess",sess.cookie.email);
-      res.json({"email1": req.session.email, "user" : true });
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("TestR");
+  
+        dbo.collection("user").findOne({email:req.session.email}, function(err, res) {
+          if (err) throw err;
+          // console.log("res.email",res);
+          console.log("res.status",res.status);
+          status = res.status
+        })
+      });
+      setTimeout(() => {
+        res.json({"email1": req.session.email, "user" : true,"status": status });
+      },500);
+      
   }
   else {
-    res.json({"email1": "no email", "user" : false });
+    res.json({"email1": "no email", "user" : false,"status": "no user" });
   }
 });
 
@@ -451,7 +558,7 @@ res.status(200).send({"message":"Data recieved"})
  
  
   })
- app.post('/enroll',function(req,res)
+  app.post('/enroll',function(req,res)
  {
    var email;
      console.log(req.body);
@@ -505,6 +612,7 @@ res.status(200).send({"message":"Data recieved"})
        });
      res.status(200).send({"message":"Data recieved"})
  })
+ 
  
  app.post('/update',function(req,res)
  {
@@ -571,11 +679,11 @@ res.status(200).send({"message":"Data recieved"})
        var dbo = db.db("quizdata");
        // var myobj = { code:req.body.email,email:"a@gmail.com"};
      
-         dbo.collection("python").findOne({ds:"ll"}, function(err, res) {
+         dbo.collection("cprogram").findOne({"subject":"cprogramming"}, function(err, res) {
              if (err) throw err;
-             console.log("res ques",res.ds)
-             console.log("res",res.options[0][0])
-             qs=res.options;
+             console.log("res ques",res.quiz)
+            //  console.log("res",res.options[0][0])
+             qs=res.pubmanual;
              console.log("1 document read");
              db.close();
            });
@@ -584,11 +692,370 @@ res.status(200).send({"message":"Data recieved"})
                message:false,
                q: qs
              })
-           },400);
+           },5000);
        
      });
    
     })
+    app.post("/putquiz", (req,res) => {
+      console.log(req.body);
+      var i = req.body.no - 1;
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        // Insert document in TestR
+        var dbo = db.db("quizdata");
+
+          dbo.collection("cprogram").updateOne({ "subject" : "cprogramming"},{$push: {   //sorting
+            quiz: {
+              $each: [req.body],
+              $position: i}
+          }},function(err, res) {
+            if (err) throw err;
+            console.log("1 document inserted");
+            db.close();
+          });
+      res.status(200).send({"message":"Data inserted"})
+    
+     });
+    });
+    app.post("/putexp", (req,res) => {
+      console.log(req.body);
+      var i = req.body.no - 1;
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        // Insert document in TestR
+        var dbo = db.db("labmanual");
+        // var myobj = { exp:req.body,email:"a@gmail.com"};
+        // var mine = {"manual1":{"program": {"exp":{"no":77}}}};
+        // var mine1 = {exp:{"no":1}};
+        // var test = {test:req.body}
+        // var update1 = {"manual1": {"program":{"exp":{programs: req.body}}}};
+        // updateObj.$push["name."+i] = req.body;{ "subject" : "cprogramming" }
+        // {$push : {"test.$[element]":req.body}},
+        //   {arrayFilters: [ { element: 2 } ]}
+        
+          dbo.collection("cprogram").updateOne({ "subject" : req.body.programming},{$push: {   //sorting
+            manual: {
+              $each: [req.body],
+              $position: i}
+          }},function(err, res) {
+            if (err) throw err;
+            console.log("1 document inserted");
+            db.close();
+          });
+      res.status(200).send({"message":"Data inserted"})
+    
+     });
+    });
+    app.post("/putprog", (req,res) => {
+      var i = req.body.eno;
+      var j = req.body.pno -1;
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("labmanual");
+        dbo.collection("cprogram").update(
+          { "subject" : req.body.programming,"manual.no": i},
+          { $push: { "manual.$.prog": {
+            $each : [req.body],
+            $position : j
+          } } },function(err, res) {
+            if (err) throw err;
+            db.close();
+          });
+      });
+      setTimeout(() => {
+        console.log("iamman1");
+        res.json({
+          message:true,
+        })
+      },1000);
+    });
+    app.post("/updateexp", (req,res) => {  //update of exp name only expno can be used as primary key
+      var i = req.body.eno;
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("labmanual");
+        dbo.collection("cprogram").updateOne(
+          { "subject" : req.body.programming,"manual.no": i},
+          { $set: { "manual.$.name" : req.body.updname } },
+          function(err, res) {
+            if (err) throw err;
+            db.close();
+          });
+      });
+      setTimeout(() => {
+        console.log("iamman1");
+        res.json({
+          message:true,
+        })
+      },1000);
+    });
+    app.post("/updatequiz", (req,res) => {  //update of exp name only expno can be used as primary key
+      // var i = req.body.no;
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("quizdata");
+        dbo.collection("cprogram").updateOne(
+          { "subject" : "cprogramming"},
+          {$set: {quiz : req.body} },
+          function(err, res) {
+            if (err) throw err;
+            db.close();
+          });
+      });
+      setTimeout(() => {
+        console.log("iamman1");
+        res.json({
+          message:true,
+        })
+      },1000);
+    });
+    app.post("/updateprog", (req,res) => {  //update of exp name only expno can be used as primary key
+      var eno = req.body.eno;
+      var pno = req.body.pno;
+      console.log("eno",eno,"pno",pno);
+      console.log(req.body);
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("labmanual");
+        dbo.collection("cprogram").updateOne(
+          { "subject" : req.body.programming},
+          { $set: { "manual.$[i].prog.$[j].title" : req.body.title,
+          "manual.$[i].prog.$[j].desc" : req.body.desc,
+          "manual.$[i].prog.$[j].ip_format" : req.body.ip_format,
+          "manual.$[i].prog.$[j].cons" : req.body.cons,
+          "manual.$[i].prog.$[j].op_format" : req.body.op_format,
+          "manual.$[i].prog.$[j].tc_ip" : req.body.tc_ip,
+          "manual.$[i].prog.$[j].tc_op" : req.body.tc_op,
+          "manual.$[i].prog.$[j].expl" : req.body.expl,
+          "manual.$[i].prog.$[j].tcip" : req.body.tcip,
+          "manual.$[i].prog.$[j].tcop" : req.body.tcop}},
+          { arrayFilters: [{"i.no" : eno },{ "j.pno" : pno}] },
+          function(err, res) {
+            if (err) throw err;
+            db.close();
+          });
+          
+        })
+        setTimeout(() => {
+          console.log("iamman");
+          res.json({
+            message:true,
+          })
+        },1000);
+    });
+    app.post("/getmanual", (req,res) => {
+      var man=[];
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        // Insert document in TestR
+        var dbo = db.db("labmanual");
+        dbo.collection("cprogram").findOne({"subject":req.body.key},function(err, res) {
+          if (err) throw err;
+          console.log(res);
+          man = res.manual;
+          console.log(man);
+          db.close();
+        });
+    
+      });
+      setTimeout(() => {
+        console.log("iamman",man);
+        res.json({
+          message:true,
+          manual: man
+        })
+      },5000);
+    });
+    app.get("/getquizbook", (req,res) => {
+      var man=[];
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        // Insert document in TestR
+        var dbo = db.db("quizdata");
+        dbo.collection("cprogram").findOne({"subject":"cprogramming"},function(err, res) {
+          if (err) throw err;
+          console.log(res);
+          man = res.quiz;
+          console.log(man);
+          db.close();
+        });
+    
+      });
+      setTimeout(() => {
+        console.log("iamman",man);
+        res.json({
+          message:true,
+          manual: man
+        })
+      },5500);
+    });
+    app.post("/getpubman", (req,res) => {
+      var man=[];
+      console.log(req.body.key);
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        // Insert document in TestR
+        var dbo = db.db("labmanual");
+        dbo.collection("cprogram").findOne({"subject":req.body.key},function(err, res) {
+          if (err) throw err;
+          console.log(res);
+          man = res.pubmanual;
+          console.log(man);
+          db.close();
+        });
+    
+      });
+      setTimeout(() => {
+        console.log("iamman",man);
+        res.json({
+          message:true,
+          manual: man
+        })
+      },5000);
+    });
+    app.post("/delete_exp",(req,res)=>{
+      var k = req.body.key;
+      console.log(k);
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        
+        var dbo = db.db("labmanual");
+        dbo.collection("cprogram").update({ "subject" : req.body.programming},{$pull:{   //sorting
+         manual:{key:k}
+         }},function(err, res) {
+          if (err) throw err;
+          console.log("1 document delete");
+          db.close();
+      });
+    });
+      
+    setTimeout(() => {
+      console.log("iamman1");
+      res.json({
+        message:true,
+      })
+    },1000);
+    
+    });
+    app.post("/delete_prog",(req,res)=>{
+      var i = req.body.eno;
+      var k = req.body.pkey;
+      console.log(k);
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        
+        var dbo = db.db("labmanual");
+        dbo.collection("cprogram").update({ "subject" : req.body.programming, "manual.no": i},{ $pull:{   //sorting
+         "manual.$.prog":{pkey:k}
+         }},function(err, res) {
+          if (err) throw err;
+          console.log("1 document delete");
+          db.close();
+      });
+    });
+    setTimeout(() => {
+      console.log("iamman1");
+      res.json({
+        message:true,
+      })
+    },1000);
+    
+    });
+    app.post("/delete_tc",(req,res)=>{
+      var i = req.body.eno;
+      var j = req.body.pno;
+      var ind = req.body.ind -1;
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        
+        var dbo = db.db("labmanual");
+        dbo.collection("cprogram").updateOne({ "subject" : "cprogramming"},
+        { $pop: { "manual.$[i].prog.$[j].tcip": ind,
+        "manual.$[i].prog.$[j].tcop": ind}},
+        { arrayFilters: [{"i.no" : i },{ "j.pno" : j}] },function(err, res) {
+          if (err) throw err;
+          console.log("1 document delete");
+          db.close();
+      });
+    });
+    setTimeout(() => {  
+      console.log("iamman1");
+      res.json({
+        message:true,
+      })
+    },1000);
+    
+    });
+    // app.post("/progtc",(req,res)=>{
+    //   var i = req.body.eno;
+
+    //   MongoClient.connect(url, function(err, db) {
+    //     if (err) throw err;
+        
+    //     var dbo = db.db("labmanual");
+    //     dbo.collection("cprogram").findOne({ "subject" : "cprogramming"},function(err, res) {
+    //       if (err) throw err;
+    //       console.log("sss",res.pubmanual);
+    //       console.log("1 document fetched");
+    //       db.close();
+    //   });
+    // });
+    // setTimeout(() => {
+    //   console.log("iamman1");
+    //   res.json({
+    //     message:true,
+    //   })
+    // },1000);
+    
+    // });
+    app.post("/publish_man",(req,res)=>{
+     var key = req.body.pop();
+     console.log(key)
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        
+        var dbo = db.db("labmanual");
+        dbo.collection("cprogram").updateOne({ "subject" : key},{ $set:{pubmanual : req.body}},function(err, res) {
+          if (err) throw err;
+          console.log("1 document delete");
+          db.close();
+      });
+      });
+    
+      
+      setTimeout(() => {
+        console.log("iamman1");
+        res.json({
+          message:true,
+        })
+      },1000);
+    
+    });
+    app.post("/publish_quizbook",(req,res)=>{
+     
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        
+        var dbo = db.db("quizdata");
+        dbo.collection("cprogram").updateOne({ "subject" : "cprogramming"},{ $set:{pubmanual : req.body}},function(err, res) {
+          if (err) throw err;
+          console.log("1 document published");
+          db.close();
+      });
+      });
+    
+      
+      setTimeout(() => {
+        console.log("iamman1");
+        res.json({
+          message:true,
+        })
+      },1000);
+    
+    });
+    
+
 
  app.listen(PORT,function()
  {
