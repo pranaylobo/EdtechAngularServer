@@ -43,7 +43,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(cors({
-origin: [http://nginxkubernetes-git-machinelearninglobo.apps.ca-central-1.starter.openshift-online.com','http://nginxkubernetes-git-machinelearninglobo.apps.ca-central-1.starter.openshift-online.com'],
+origin: ['http://nginxkubernetes-git-machinelearninglobo.apps.ca-central-1.starter.openshift-online.com','http://nginxkubernetes-git-machinelearninglobo.apps.ca-central-1.starter.openshift-online.com'],
 credentials: true
 }));
 
