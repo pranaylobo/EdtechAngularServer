@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const cors = require('cors')
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb+srv://Pranay:REDcherry%401@angulartest-wdzzt.gcp.mongodb.net/test?authSource=admin&replicaSet=Angulartest-shard-0&readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=true";
+var url = "mongodb+srv://Pranay:REDcherry@cluster0.csuem.gcp.mongodb.net/test?authSource=admin&replicaSet=atlas-142jk5-shard-0&readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=true";
 const fetch = require("node-fetch");
 const PORT = process.env.PORT || 8080;
 const app = express();
