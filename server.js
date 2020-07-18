@@ -27,7 +27,7 @@ const router = express.Router();
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  res.setHeader('Access-Control-Allow-Origin', 'https://alexajovo-c6937.web.app');
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -44,7 +44,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(cors({
-origin: ['http://localhost:4200','http://localhost:4200'],
+origin: ['https://alexajovo-c6937.web.app','https://alexajovo-c6937.web.app'],
 credentials: true
 }));
 
