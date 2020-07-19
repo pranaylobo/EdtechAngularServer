@@ -272,7 +272,7 @@ app.get('/dashboard',(req,res) => {
   console.log("reqhead",req.headers);
   console.log("id",req.sessionID);
   console.log(req.cookies);
-   console.log("xzxzxxzxz",req.session.email)
+   console.log("xzxzxxzxz",req.session.email,req.sessionID,req.session)
 
   if(req.session.email) {
 
