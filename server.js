@@ -191,7 +191,6 @@ app.post('/login',validatePayloadMiddleware,function(req,res)
     
     dbo.collection("user").findOne({email:req.body.email}, function(err, res) {
       if (err) throw err;
-      console.log("res.email",res);
       // console.log("res.status",res.status);
       if(res == null)
       {
@@ -268,25 +267,20 @@ app.post('/login',validatePayloadMiddleware,function(req,res)
 
 app.get('/dashboard',(req,res) => {
   // sess = req.session;
-  
   console.log(req.session);
   console.log("reqhead",req.headers);
   console.log("id",req.sessionID);
   console.log(req.cookies);
 
-  console.log("xzxzxxzxz",req.session.email,req.session,req.headers,req.sessionID,req.cookies)
+  console.log("xzxzxxzxz",req.session.email)
   if(req.session.email) {
 
       // console.log("sess",sess.cookie.email);
-   console.log(req.session);
-  console.log("reqhead",req.headers);
-  console.log("id",req.sessionID);
-  console.log(req.cookies);
-
-  console.log("xzxzxxzxz",req.session.email)
       MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("TestR");
+
+
   
         dbo.collection("user").findOne({email:req.session.email}, function(err, res) {
           if (err) throw err;
@@ -461,7 +455,7 @@ res.status(200).send({"message":"Data recieved"})
      if (err) throw err;
      var dbo = db.db("TestR");
      
-     dbo.collection("user").findOne({email:req.body.email},{status:true}, function(err, res) {
+     dbo.collection("user").findOne({email:req.body.email},{status1:true}, function(err, res) {
        if (err) throw err;
        console.log("res.email",res);
        if(res === null)
@@ -581,7 +575,7 @@ res.status(200).send({"message":"Data recieved"})
          if (err) throw err;
          // Insert document in TestR
          var dbo = db.db("TestR");
-         var myobj = { fname: req.body.name, lname:req.body.lname,email:req.body.email,password:req.body.password, status: false};
+         var myobj = { fname: req.body.name, lname:req.body.lname,email:req.body.email,password:req.body.password, status1: false,status:"student"};
        
            dbo.collection("user").insertOne(myobj, function(err, res) {
                if (err) throw err;
@@ -631,7 +625,7 @@ res.status(200).send({"message":"Data recieved"})
      if (err) throw err;
      var dbo = db.db("TestR");
      
-     dbo.collection("user").updateOne({email: req.body.email},{$set: {status: true}}, function(err, res) {
+     dbo.collection("user").updateOne({email: req.body.email},{$set: {status1: true}}, function(err, res) {
        if (err) throw err;
        console.log("1 document updated");
        result = true;
@@ -654,8 +648,8 @@ res.status(200).send({"message":"Data recieved"})
        
        dbo.collection("user").findOne({email:global.email1}, function(err, res) {
          if (err) throw err;
-         console.log(res["status"]);
-        global.status1 = res["status"];
+         console.log(res["status1"]);
+        global.status1 = res["status1"];
         db.close();
  
         global.count=1;
@@ -1069,6 +1063,6 @@ res.status(200).send({"message":"Data recieved"})
 
  app.listen(PORT,function()
  {
-     console.log("sunn raha hu me new version2")
+     console.log("sunn raha hu ")
  });
- 
+  
