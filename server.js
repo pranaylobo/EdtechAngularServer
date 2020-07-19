@@ -44,7 +44,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(cors({
-origin: ['https://alexajovo-c6937.web.app','https://alexajovo-c6937.web.app'],
+origin: ['http://localhost:4200','http://localhost:4200'],
 credentials: true
 }));
 
@@ -1060,6 +1060,6 @@ res.status(200).send({"message":"Data recieved"})
 
  app.listen(PORT,function()
  {
-     console.log("sunn raha hu me yooo1 new version xyz")
+     console.log("sunn raha hu me yooo1 new version xyz123")
  });
  
