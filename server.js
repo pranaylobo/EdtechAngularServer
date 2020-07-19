@@ -268,11 +268,7 @@ app.post('/login',validatePayloadMiddleware,function(req,res)
 
 app.get('/dashboard',(req,res) => {
   // sess = req.session;
-  console.log(req.session);
-  console.log("reqhead",req.headers);
-  console.log("id",req.sessionID);
-  console.log(req.cookies);
-   console.log("xzxzxxzxz",req.session.email,req.sessionID,req.session)
+  
 
   if(req.session.email) {
 
@@ -1062,6 +1058,6 @@ res.status(200).send({"message":"Data recieved"})
 
  app.listen(PORT,function()
  {
-     console.log("sunn raha hu me new version")
+     console.log("sunn raha hu me new version1")
  });
  
