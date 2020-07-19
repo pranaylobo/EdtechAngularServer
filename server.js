@@ -27,7 +27,7 @@ const router = express.Router();
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200/');
+  res.setHeader('Access-Control-Allow-Origin', 'https://production-build-nginx-kubernetes-git-angularapps-kubernetesml.apps.us-east-1.starter.openshift-online.com');
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -44,7 +44,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(cors({
-origin: ['http://localhost:4200','http://localhost:4200'],
+origin: ['https://production-build-nginx-kubernetes-git-angularapps-kubernetesml.apps.us-east-1.starter.openshift-online.com','https://production-build-nginx-kubernetes-git-angularapps-kubernetesml.apps.us-east-1.starter.openshift-online.com'],
 credentials: true
 }));
 
@@ -1063,6 +1063,6 @@ res.status(200).send({"message":"Data recieved"})
 
  app.listen(PORT,function()
  {
-     console.log("sunn raha hu ")
+     console.log("sunn raha hu final ")
  });
   
