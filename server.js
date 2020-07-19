@@ -272,6 +272,8 @@ app.get('/dashboard',(req,res) => {
   console.log("reqhead",req.headers);
   console.log("id",req.sessionID);
   console.log(req.cookies);
+   console.log("xzxzxxzxz",req.session.email)
+
   if(req.session.email) {
 
       // console.log("sess",sess.cookie.email);
@@ -1060,6 +1062,6 @@ res.status(200).send({"message":"Data recieved"})
 
  app.listen(PORT,function()
  {
-     console.log("sunn raha hu me yooo1 new version xyz123sddsds")
+     console.log("sunn raha hu me new version")
  });
  
