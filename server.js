@@ -269,10 +269,21 @@ app.post('/login',validatePayloadMiddleware,function(req,res)
 app.get('/dashboard',(req,res) => {
   // sess = req.session;
   
+  console.log(req.session);
+  console.log("reqhead",req.headers);
+  console.log("id",req.sessionID);
+  console.log(req.cookies);
 
+  console.log("xzxzxxzxz",req.session.email,req.session,req.headers,req.sessionID,req.cookies)
   if(req.session.email) {
 
       // console.log("sess",sess.cookie.email);
+   console.log(req.session);
+  console.log("reqhead",req.headers);
+  console.log("id",req.sessionID);
+  console.log(req.cookies);
+
+  console.log("xzxzxxzxz",req.session.email)
       MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("TestR");
@@ -1058,6 +1069,6 @@ res.status(200).send({"message":"Data recieved"})
 
  app.listen(PORT,function()
  {
-     console.log("sunn raha hu me new version1")
+     console.log("sunn raha hu me new version2")
  });
  
