@@ -27,7 +27,7 @@ const router = express.Router();
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'https://production-build-nginx-kubernetes-git-angularapps-kubernetesml.apps.us-east-1.starter.openshift-online.com');
+  res.setHeader('Access-Control-Allow-Origin', 'https://alexajovo-c6937.web.app');
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -44,7 +44,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(cors({
-origin: ['https://production-build-nginx-kubernetes-git-angularapps-kubernetesml.apps.us-east-1.starter.openshift-online.com','https://production-build-nginx-kubernetes-git-angularapps-kubernetesml.apps.us-east-1.starter.openshift-online.com'],
+origin: ['https://alexajovo-c6937.web.app','https://alexajovo-c6937.web.app'],
 credentials: true
 }));
 
