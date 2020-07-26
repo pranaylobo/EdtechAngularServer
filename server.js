@@ -206,7 +206,7 @@ app.post('/login',validatePayloadMiddleware,function(req,res)
                 global.checkuser=true;
                 pass = res.password;
                 email = res.email;
-                status = res.status1;
+                status = res.status;
               }
               else {
                 pass = res.password;
