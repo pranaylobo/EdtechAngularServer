@@ -68,6 +68,7 @@ const validatePayloadMiddleware = (req, res, next) => {
 }
  
 
+
 let sess;
  global.checkuser;
  global.checkpass;
@@ -1057,9 +1058,91 @@ res.status(200).send({"message":"Data recieved"})
       },1000);
     
     });
-    
+    app.post("/quiz_sub", (req,res) => {
+      console.log(req.body);
+      console.log("hhb",req.body.key, req.body);
+      // var i = req.body.no - 1;
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        // Insert document in TestR
+        var dbo = db.db("TestR");
 
+          dbo.collection("user").updateOne({ "email" : req.body.key},{$push: {quiz:req.body.sub}},function(err, res) {
+            if (err) throw err;
+            console.log("1 document inserted");
+            db.close();
+          });
+      res.status(200).send({"message":"Data inserted"})
     
+     });
+    });
+    app.post("/getquizsub", (req,res) => {
+      var man=[];
+      console.log("hhb",req.body.key, req.body);
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        // Insert document in TestR
+        var dbo = db.db("TestR");
+        dbo.collection("user").findOne({"email":req.body.key},function(err, res) {
+          if (err) throw err;
+          console.log(res);
+          man = res.quiz;
+          console.log(man);
+          db.close();
+        });
+    
+      });
+      setTimeout(() => {
+        console.log("iamman",man);
+        res.json({
+          message:true,
+          manual: man
+        })
+      },5000);
+    });
+    app.post("/getprogsub", (req,res) => {
+      var man=[];
+      console.log("hhb",req.body.key, req.body);
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        // Insert document in TestR
+        var dbo = db.db("TestR");
+        dbo.collection("user").findOne({"email":req.body.key},function(err, res) {
+          if (err) throw err;
+          console.log(res);
+          man = res.program;
+          console.log(man);
+          db.close();
+        });
+    
+      });
+      setTimeout(() => {
+        console.log("iamman",man);
+        res.json({
+          message:true,
+          manual: man
+        })
+      },5000);
+    });
+    app.post("/prog_sub", (req,res) => {
+      console.log(req.body);
+      console.log("hhb",req.body.key, req.body);
+      // var i = req.body.no - 1;
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        // Insert document in TestR
+        var dbo = db.db("TestR");
+
+          dbo.collection("user").updateOne({ "email" : req.body.key},{$push: {program:req.body.sub}},function(err, res) {
+            if (err) throw err;
+            console.log("1 document inserted");
+            db.close();
+          });
+      res.status(200).send({"message":"Data inserted"})
+    
+     });
+    });
+
 
 
  app.listen(PORT,function()
